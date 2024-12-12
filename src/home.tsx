@@ -120,15 +120,24 @@ const FurnitureManagement: React.FC = () => {
   return (
     <div>
       {/* 新增按鈕 */}
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<Add />}
-        onClick={handleOpenDialog}
-        sx={{ mb: 2 }}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        新增家具
-      </Button>
+        <h2>家具庫存管理</h2>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<Add />}
+          onClick={handleOpenDialog}
+          sx={{ mb: 2 }}
+        >
+          新增家具
+        </Button>
+      </div>
 
       {/* 家具庫存表格 */}
       <TableContainer component={Paper}>
@@ -138,6 +147,9 @@ const FurnitureManagement: React.FC = () => {
               <TableCell>家具名稱</TableCell>
               <TableCell>原價</TableCell>
               <TableCell>折扣價</TableCell>
+              <TableCell>庫存</TableCell>
+              <TableCell>分類</TableCell>
+              <TableCell>狀態</TableCell>
               <TableCell>操作</TableCell>
             </TableRow>
           </TableHead>
@@ -149,14 +161,19 @@ const FurnitureManagement: React.FC = () => {
                 <TableCell>{item.discount_price} 元</TableCell>
                 <TableCell>{item.stock} 件</TableCell>
                 <TableCell>{item.category}</TableCell>
-                <TableCell>{item.status}</TableCell>
+                <TableCell>{item.status ? "販售中" : "暫停販售"}</TableCell>
                 <TableCell>
-                  <IconButton color="primary" onClick={() => handleEdit(item)}>
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleEdit(item)}
+                    size="small"
+                  >
                     <Edit />
                   </IconButton>
                   <IconButton
                     color="secondary"
                     onClick={() => handleDelete(item.id)}
+                    size="small"
                   >
                     <Delete />
                   </IconButton>
