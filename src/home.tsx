@@ -150,7 +150,7 @@ const FurnitureManagement: React.FC = () => {
               <TableCell>庫存</TableCell>
               <TableCell>分類</TableCell>
               <TableCell>狀態</TableCell>
-              <TableCell>操作</TableCell>
+              <TableCell>功能</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
