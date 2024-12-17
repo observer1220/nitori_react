@@ -3,6 +3,8 @@
 # Function to display error messages
 function error_exit {
     echo "$1" 1>&2
+    echo "Press any key to exit..."
+    read -n 1
     exit 1
 }
 
@@ -41,3 +43,6 @@ if [ $? -ne 0 ]; then
 else
     echo "Files successfully copied to VPS"
 fi
+
+echo "Script executed successfully. Press any key to exit..."
+read -n 1
