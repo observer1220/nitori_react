@@ -23,10 +23,10 @@ git push origin main || error_exit "Error: Git push failed"
 echo "Updating built files to VPS..."
 
 # SSH 連線測試
-ssh -q root@64.176.37.84 exit
-if [ $? -ne 0 ]; then
-    error_exit "Error: Cannot connect to VPS via SSH"
-fi
+# ssh -q root@64.176.37.84 exit
+# if [ $? -ne 0 ]; then
+#     error_exit "Error: Cannot connect to VPS via SSH"
+# fi
 
 # 清空目標資料夾
 echo "Clearing the target directory on VPS..."
