@@ -21,6 +21,14 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# 清空目標資料夾
+echo "Clearing the target directory on VPS..."
+ssh root@64.176.37.84 'rm -rf /var/www/furniture_website/html/*'
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to clear the target directory on VPS"
+    exit 1
+fi
+
 # SCP 傳輸檔案
 scp -r dist/* root@64.176.37.84:/var/www/furniture_website/html/
 if [ $? -eq 0 ]; then
