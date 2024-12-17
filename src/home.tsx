@@ -24,6 +24,7 @@ import {
   editProduct,
   deleteProduct,
 } from "./api/products";
+import { formatNumber } from "./utils/numbers";
 
 // 家具項目的型別定義
 interface FurnitureItem {
@@ -157,9 +158,9 @@ const FurnitureManagement: React.FC = () => {
             {furnitureList.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.name}</TableCell>
-                <TableCell>{item.price} 元</TableCell>
-                <TableCell>{item.discount_price} 元</TableCell>
-                <TableCell>{item.stock} 件</TableCell>
+                <TableCell>{formatNumber(item.price)} 元</TableCell>
+                <TableCell>{formatNumber(item.discount_price)} 元</TableCell>
+                <TableCell>{formatNumber(item.stock)} 件</TableCell>
                 <TableCell>{item.category}</TableCell>
                 <TableCell>{item.status ? "販售中" : "暫停販售"}</TableCell>
                 <TableCell>
