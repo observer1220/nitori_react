@@ -42,7 +42,8 @@ export default function FixedBottomNavigation() {
         <BottomNavigation
           showLabels
           value={value}
-          onChange={(newValue) => {
+          onChange={(event, newValue) => {
+            console.log(event);
             handleNavigation(newValue);
           }}
         >
