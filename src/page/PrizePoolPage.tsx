@@ -27,10 +27,10 @@ const PrizePoolPage = () => {
   }, []);
   return (
     <Container>
-      <img src={LotteryGIF} alt="prize pool" width={300} />
+      <img src={LotteryGIF} alt="prize pool" width={250} />
       <h3>目前累積獎金：{totalPrize} tBNB</h3>
       <RulesSection>
-        <li>1. 該遊戲是基於 Binance testnet 所開發的區塊鏈遊戲。</li>
+        <li>1. 該遊戲是基於 Binance testnet 所開發的去中心化金融應用。</li>
         <li>
           2. 玩家可透過{" "}
           <Link to="https://www.bnbchain.org/en/testnet-faucet" target="_blank">

@@ -22,7 +22,7 @@ const BuyTicketsPage = () => {
   //   - 彩券購買後馬上開獎
   return (
     <Container>
-      <h3>購買彩券</h3>
+      {/* <h3>購買彩券</h3> */}
       <Stack
         component="form"
         sx={{ "& .MuiTextField-root": { m: 1 } }}
