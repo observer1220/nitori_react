@@ -23,8 +23,8 @@ import {
   addProduct,
   editProduct,
   deleteProduct,
-} from "./api/products";
-import { formatNumber } from "./utils/numbers";
+} from "../api/products";
+import { formatNumber } from "../utils/numbers";
 
 // 家具項目的型別定義
 interface FurnitureItem {
