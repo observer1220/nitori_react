@@ -14,11 +14,16 @@ const Container = styled.div`
 `;
 
 const BuyTicketsPage = () => {
+  // 查詢 URL 是否有 ref參數
+  const currentUrl = new URL(window.location.href);
+  const urlRef = currentUrl.searchParams.get("ref");
+
   const [lotCount, setLotCount] = useState(1);
   const [mul, setMul] = useState(1);
   const [luckyNumber, setLuckyNumber] = useState(0);
-  const [ref, setRef] = useState("");
+  const [ref, setRef] = useState(urlRef);
   const [cost, setCost] = useState(0.02);
+
   //   - Tickets：0
   //   - 彩券購買後馬上開獎
   return (
@@ -37,6 +42,7 @@ const BuyTicketsPage = () => {
             value={lotCount}
             required
             type="number"
+            fullWidth
             onChange={(event) => {
               if (Number(event.target.value) < 1) {
                 setLotCount(1);
@@ -55,6 +61,7 @@ const BuyTicketsPage = () => {
             value={mul}
             required
             type="number"
+            fullWidth
             onChange={(event) => {
               if (Number(event.target.value) < 1) {
                 setMul(1);
@@ -73,6 +80,7 @@ const BuyTicketsPage = () => {
               label="幸運號碼"
               value={luckyNumber}
               type="number"
+              fullWidth
               onChange={(event) => {
                 if (Number(event.target.value) < 1) {
                   setLuckyNumber(1);
@@ -93,12 +101,14 @@ const BuyTicketsPage = () => {
             label="推薦碼"
             value={ref}
             onChange={(event) => setRef(event.target.value)}
+            fullWidth
           />
           <TextField
             id="cost"
             label="下注金額"
             value={`${cost} tBNB`}
             disabled
+            fullWidth
           />
         </Stack>
         <Stack spacing={2} direction="row" justifyContent="center">

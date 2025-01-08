@@ -39,7 +39,7 @@ export default function InvestmentPage() {
   useEffect(() => {
     const getInvestmentBalance = async () => {
       const tmp = await GetInvestmentBalanceABI();
-      setInvestBalance(tmp);
+      setInvestBalance(formatBNB(tmp));
     };
 
     const getRecentDividendTimeABI = async () => {
@@ -65,7 +65,7 @@ export default function InvestmentPage() {
       // 這裡實作總投資金額的邏輯
       const tmp = await totalInvestmentAmountABI();
       // console.log(tmp);
-      setTotalInvestmentAmount(tmp);
+      setTotalInvestmentAmount(formatBNB(tmp));
     };
 
     const getInvestorsProfit = async () => {

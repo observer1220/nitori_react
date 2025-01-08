@@ -17,7 +17,8 @@ const Container = styled.div`
 `;
 
 export default function SharePage() {
-  const url = window.location.href; // 取得目前的URL
+  const getWalletAddress = sessionStorage.getItem("walletAddress");
+  const url = `${window.location.href}?ref=${getWalletAddress}`; // 取得目前的URL
   const [referalProfit, setReferalProfit] = useState(0);
 
   const qrcode = (

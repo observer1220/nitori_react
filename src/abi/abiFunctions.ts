@@ -9,7 +9,6 @@ const provider = new ethers.JsonRpcProvider(providerUrl);
 
 // 合約地址與 ABI
 const contractAddress = "0x6bf8C264dC252D03B5F714C4D28af6eFB666c416";
-// 0x6bf8C264dC252D03B5F714C4D28af6eFB666c416
 const contractABI = LotteryGameABI;
 
 // 初始化合約(會消耗Gas fee)
@@ -42,7 +41,7 @@ const BuyLotteryTicketsABI = async (
   lotCount: number,
   mul: number,
   luckyNumber: number,
-  ref: string
+  ref: string | null
 ) => {
   try {
     const contract = await initializeContractWithSigner();

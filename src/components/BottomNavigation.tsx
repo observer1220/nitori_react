@@ -14,20 +14,25 @@ export default function FixedBottomNavigation() {
   const ref = React.useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
+  const currentUrl = new URL(window.location.href);
+  const urlRef = currentUrl.searchParams.get("ref")
+    ? `?ref=${currentUrl.searchParams.get("ref")}`
+    : "";
+
   const handleNavigation = (newValue: any) => {
     setValue(newValue);
     switch (newValue) {
       case 0:
-        navigate("/");
+        navigate(`/${urlRef}`);
         break;
       case 1:
-        navigate("/buy");
+        navigate(`/buy${urlRef}`);
         break;
       case 2:
-        navigate("/invest");
+        navigate(`/invest${urlRef}`);
         break;
       case 3:
-        navigate("/share");
+        navigate(`/share${urlRef}`);
         break;
       default:
         break;
