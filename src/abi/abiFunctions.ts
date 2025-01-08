@@ -1,8 +1,11 @@
 import { ethers } from "ethers";
 import { LotteryGameABI } from "../abi/LotteryGameABI";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 const ethereum = (window as any).ethereum;
+// 設定 Provider（連接到幣安測試網）
+const providerUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/";
+const provider = new ethers.JsonRpcProvider(providerUrl);
 
 // 合約地址與 ABI
 const contractAddress = "0x5DC1adC25DBAfa8E5aFeE2D32b69FA5748dbbb63";
@@ -11,7 +14,9 @@ const contractABI = LotteryGameABI;
 // 初始化合約(會消耗Gas fee)
 const initializeContractWithSigner = async () => {
   if (!ethereum) {
-    alert("請安裝 MetaMask");
+    toast.error("請安裝 MetaMask", {
+      position: "top-center",
+    });
     return null;
   }
 
@@ -28,10 +33,6 @@ const initializeContractWithSigner = async () => {
 
 // 初始化合約(不會消耗Gas fee)
 const initializeContractWithProvider = async () => {
-  // 設定 Provider（連接到幣安測試網）
-  const providerUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/";
-  const provider = new ethers.JsonRpcProvider(providerUrl);
-
   return new ethers.Contract(contractAddress, contractABI, provider);
 };
 
@@ -52,15 +53,17 @@ const BuyLotteryTicketsABI = async (
       luckyNumber,
       ref || ethers.ZeroAddress, // 如果沒有推薦碼，設置地址為 0x00...
       {
-        value: ethers.parseEther("0.02") * BigInt(lotCount), // 替換為實際所需的ETH金額
+        value: ethers.parseEther("0.02") * BigInt(lotCount) * BigInt(mul), // 替換為實際所需的ETH金額
       }
     );
 
     const receipt = await tx.wait(); // 等待交易完成
     console.log("交易成功", receipt);
   } catch (error) {
-    console.log("BuyLotteryTicketsABI", error);
-    alert("BuyLotteryTicketsABI");
+    // console.log("BuyLotteryTicketsABI", error);
+    toast.error("取消購買", {
+      position: "top-center",
+    });
   }
 };
 
@@ -74,7 +77,9 @@ const LotteryDrawsABI = async () => {
     // console.log("LotteryDrawsABI", result);
     return result;
   } catch (error) {
-    alert("You don't have undraw lottery tickets");
+    toast.error("您沒有未抽獎的彩券", {
+      position: "top-center",
+    });
   }
 };
 
@@ -87,7 +92,6 @@ const GetDevAddressABI = async () => {
     // return result.toString();
   } catch (error) {
     console.log("GetDevAddressABI", error);
-    alert("GetDevAddressABI");
   }
 };
 
@@ -101,7 +105,6 @@ const GetInvestmentBalanceABI = async () => {
     return result.toString();
   } catch (error) {
     console.log("GetInvestmentBalanceABI", error);
-    alert("GetInvestmentBalanceABI");
   }
 };
 
@@ -114,7 +117,6 @@ const RecentDividendTimeABI = async () => {
     return result.toString();
   } catch (error) {
     console.log("GetInvestmentBalanceABI", error);
-    alert("GetNextDividendTimeABI");
   }
 };
 
@@ -126,7 +128,6 @@ const totalInvestmentAmountABI = async () => {
     return result.toString();
   } catch (error) {
     console.log("totalInvestmentAmount", error);
-    alert("totalInvestmentAmount");
   }
 };
 
@@ -138,7 +139,6 @@ const investorsProfitABI = async () => {
     return result.toString();
   } catch (error) {
     console.log("investorsProfit", error);
-    alert("investorsProfit");
   }
 };
 
@@ -151,7 +151,6 @@ const GetLatestLotteryABI = async () => {
     return result;
   } catch (error) {
     console.log("GetLatestLottery", error);
-    alert("GetLatestLottery");
   }
 };
 
@@ -164,7 +163,6 @@ const GetWinningRecordABI = async () => {
     return result;
   } catch (error) {
     console.log("GetWinningRecord", error);
-    alert("GetWinningRecord");
   }
 };
 
@@ -174,15 +172,17 @@ const InvesmentDepositABI = async (amount: number) => {
     const contract = await initializeContractWithSigner();
     if (!contract) return;
 
-    const tx = await contract.InvestmentDeposit({
+    const tx = await contract.InvesmentDeposit({
       value: ethers.parseEther(amount.toString()),
     });
 
     const receipt = await tx.wait();
     console.log("InvesmentDepositABI", receipt);
   } catch (error) {
-    console.log("InvesmentDepositABI", error);
-    alert("InvesmentDepositABI");
+    // console.log("InvesmentDepositABI", error);
+    toast.error("取消投資", {
+      position: "top-center",
+    });
   }
 };
 
@@ -199,8 +199,10 @@ const InvestmentWithdrawalABI = async (withdrawalAmount: number) => {
     const receipt = await tx.wait();
     console.log("InvestmentWithdrawalABI", receipt);
   } catch (error) {
-    console.log("InvestmentWithdrawalABI", error);
-    alert("InvestmentWithdrawalABI");
+    // console.log("InvestmentWithdrawalABI", error);
+    toast.error("取款金額高於投資餘額", {
+      position: "top-center",
+    });
   }
 };
 
@@ -216,7 +218,6 @@ const InvestmentDividendsABI = async () => {
     console.log("InvestmentDividendsABI", receipt);
   } catch (error) {
     console.log("InvestmentDividendsABI", error);
-    alert("InvestmentDividendsABI");
   }
 };
 
@@ -232,7 +233,6 @@ const WithDrawDeveloperProfitABI = async () => {
     console.log("WithDrawDeveloperProfitABI", receipt);
   } catch (error) {
     console.log("WithDrawDeveloperProfitABI", error);
-    alert("WithDrawDeveloperProfitABI");
   }
 };
 
@@ -247,9 +247,17 @@ const WithDrawReferralProfitABI = async () => {
     const receipt = await tx.wait();
     console.log("WithDrawReferralProfitABI", receipt);
   } catch (error) {
-    // alert("WithDrawReferralProfitABI", error);
-    toast.error("推薦獎勵需大於 0.01 BNB 才可領取");
+    toast.error("推薦獎勵需大於 0.01 BNB 才可領取", {
+      position: "top-center",
+    });
   }
+};
+
+// 查詢合約餘額
+const ContractBalance = async () => {
+  const contractBalance = await provider.getBalance(contractAddress);
+  // console.log("Prize Pool Amount:", ethers.formatEther(contractBalance), "ETH");
+  return ethers.formatEther(contractBalance);
 };
 
 export {
@@ -261,6 +269,7 @@ export {
   GetWinningRecordABI,
   investorsProfitABI,
   totalInvestmentAmountABI,
+  ContractBalance,
   // Write Contract 8
   BuyLotteryTicketsABI,
   LotteryDrawsABI,

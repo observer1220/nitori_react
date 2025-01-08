@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import LotteryGIF from "../assets/lottery.gif";
 import { Link } from "react-router-dom";
+import { ContractBalance } from "../abi/abiFunctions";
 
 const Container = styled.div`
   display: flex;
@@ -19,16 +20,19 @@ const RulesSection = styled.ul`
 `;
 
 const PrizePoolPage = () => {
-  const [totalPrize, setTotalPrize] = useState(0);
+  const [totalPrize, setTotalPrize] = useState("");
 
   useEffect(() => {
-    // 待更新
-    setTotalPrize(0);
+    const getContractBalance = async () => {
+      const tmp = await ContractBalance();
+      setTotalPrize(tmp);
+    };
+    getContractBalance();
   }, []);
   return (
     <Container>
       <img src={LotteryGIF} alt="prize pool" width={250} />
-      <h3>目前累積獎金：{totalPrize} tBNB</h3>
+      <h3>累積獎金：{totalPrize} tBNB</h3>
       <RulesSection>
         <li>1. 該遊戲是基於 Binance testnet 所開發的去中心化金融應用。</li>
         <li>

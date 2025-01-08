@@ -1,7 +1,9 @@
 import { useState } from "react";
 
 const ConnectWallet = () => {
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [walletAddress, setWalletAddress] = useState<string | null>(
+    sessionStorage.getItem("walletAddress")
+  );
   const ethereum = (window as any).ethereum;
 
   // Connect MetaMask
