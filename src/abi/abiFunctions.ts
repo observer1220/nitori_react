@@ -59,6 +59,9 @@ const BuyLotteryTicketsABI = async (
 
     const receipt = await tx.wait(); // 等待交易完成
     console.log("交易成功", receipt);
+    toast.success(`購買成功! 您的彩券號碼為: ${receipt.blockNumber}`, {
+      position: "top-center",
+    });
   } catch (error) {
     // console.log("BuyLotteryTicketsABI", error);
     toast.error("取消購買", {
@@ -74,8 +77,10 @@ const LotteryDrawsABI = async () => {
     if (!contract) return;
 
     const result = await contract.LotteryDraws();
-    // console.log("LotteryDrawsABI", result);
-    return result;
+    // console.log("LotteryDrawsABI", result.value);
+    toast.success(`開獎! 您的中獎金額為: ${result.value}`, {
+      position: "top-center",
+    });
   } catch (error) {
     toast.error("您沒有未抽獎的彩券", {
       position: "top-center",
