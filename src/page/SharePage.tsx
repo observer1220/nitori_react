@@ -2,7 +2,10 @@ import { Button, TextField } from "@mui/material";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import { WithDrawReferralProfitABI } from "../abi/abiFunctions";
+import {
+  GetReferralProfitABI,
+  WithDrawReferralProfitABI,
+} from "../abi/abiFunctions";
 import { ToastContainer, toast } from "react-toastify";
 
 const Container = styled.div`
@@ -30,8 +33,11 @@ export default function SharePage() {
   };
 
   useEffect(() => {
-    // 待更新
-    setReferalProfit(0.1);
+    const GetReferralProfit = async () => {
+      const tmp = await GetReferralProfitABI();
+      setReferalProfit(tmp);
+    };
+    GetReferralProfit();
   });
 
   return (

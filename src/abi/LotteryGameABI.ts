@@ -1,6 +1,58 @@
 export const LotteryGameABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "developer",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "dividends",
+        type: "uint256",
+      },
+    ],
+    name: "DeveloperDividendsPaid",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "investor",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "profit",
+        type: "uint256",
+      },
+    ],
+    name: "ProfitDistributed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "ReferralProfitWithdrawn",
+    type: "event",
+  },
+  {
     inputs: [
       { internalType: "uint16", name: "lotCount", type: "uint16" },
       { internalType: "uint8", name: "mul", type: "uint8" },
@@ -15,6 +67,13 @@ export const LotteryGameABI = [
   {
     inputs: [],
     name: "DestructContract",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "DistributeDividends",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -44,6 +103,13 @@ export const LotteryGameABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "GetReferralProfit",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "uint256", name: "recordCount", type: "uint256" }],
     name: "GetWinningRecord",
     outputs: [
@@ -64,16 +130,9 @@ export const LotteryGameABI = [
   },
   {
     inputs: [],
-    name: "InvesmentDeposit",
+    name: "InvestmentDeposit",
     outputs: [],
     stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "InvestmentDividends",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {

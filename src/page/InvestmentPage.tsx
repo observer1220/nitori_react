@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   GetInvestmentBalanceABI,
-  InvesmentDepositABI,
-  InvestmentDividendsABI,
+  InvestmentDepositABI,
+  DistributeDividendsABI,
   InvestmentWithdrawalABI,
   investorsProfitABI,
   RecentDividendTimeABI,
@@ -33,7 +33,7 @@ export default function InvestmentPage() {
   const [investBalance, setInvestBalance] = useState(0);
   const [investorsProfit, setInvestorsProfit] = useState(0);
   const [recentDividendTime, setRecentDividendTime] = useState("");
-  const [investAmount, setInvestAmount] = useState(1); // 投資金額
+  const [investAmount, setInvestAmount] = useState("0.2"); // 投資金額
   const [withdrawAmount, setWithdrawAmount] = useState(1); // 取款金額
 
   useEffect(() => {
@@ -88,26 +88,19 @@ export default function InvestmentPage() {
         <div>我的投資：{investBalance} tBNB</div>
         <div style={{ display: "flex", gap: "10px" }}>
           <TextField
-            type="number"
+            // type="number"
             id="investAmount"
             label="投資金額"
             value={investAmount}
             size="small"
-            placeholder="Invest amount should between 1 to 1000 BNB"
+            placeholder="Invest amount should between 0.2 to 1000 BNB"
             onChange={(event) => {
-              if (Number(event.target.value) < 1) {
-                setInvestAmount(1);
-                return;
-              } else if (Number(event.target.value) > 1000) {
-                setInvestAmount(1000);
-                return;
-              }
-              setInvestAmount(Number(event.target.value));
+              setInvestAmount(event.target.value);
             }}
           />
           <Button
             variant="contained"
-            onClick={() => InvesmentDepositABI(investAmount)}
+            onClick={() => InvestmentDepositABI(investAmount)}
           >
             投資
           </Button>
@@ -138,7 +131,7 @@ export default function InvestmentPage() {
           </Button>
         </div>
         <div>近期分紅時間：{recentDividendTime}</div>
-        <Button variant="contained" onClick={InvestmentDividendsABI}>
+        <Button variant="contained" onClick={DistributeDividendsABI}>
           領取分紅
         </Button>
         <h3>投資者權益</h3>

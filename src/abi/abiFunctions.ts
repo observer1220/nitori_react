@@ -8,7 +8,8 @@ const providerUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/";
 const provider = new ethers.JsonRpcProvider(providerUrl);
 
 // 合約地址與 ABI
-const contractAddress = "0x5DC1adC25DBAfa8E5aFeE2D32b69FA5748dbbb63";
+const contractAddress = "0x6bf8C264dC252D03B5F714C4D28af6eFB666c416";
+// 0x6bf8C264dC252D03B5F714C4D28af6eFB666c416
 const contractABI = LotteryGameABI;
 
 // 初始化合約(會消耗Gas fee)
@@ -171,21 +172,21 @@ const GetWinningRecordABI = async () => {
   }
 };
 
-// 投資存入(最低為1BNB)
-const InvesmentDepositABI = async (amount: number) => {
+// 投資存入
+const InvestmentDepositABI = async (amount: string) => {
   try {
     const contract = await initializeContractWithSigner();
     if (!contract) return;
 
-    const tx = await contract.InvesmentDeposit({
+    const tx = await contract.InvestmentDeposit({
       value: ethers.parseEther(amount.toString()),
     });
 
     const receipt = await tx.wait();
-    console.log("InvesmentDepositABI", receipt);
+    console.log("InvestmentDepositABI", receipt);
   } catch (error) {
-    // console.log("InvesmentDepositABI", error);
-    toast.error("取消投資", {
+    console.log("InvestmentDepositABI", error);
+    toast.error("投資金額必須在 0.2~1000 之間", {
       position: "top-center",
     });
   }
@@ -212,17 +213,17 @@ const InvestmentWithdrawalABI = async (withdrawalAmount: number) => {
 };
 
 // 投資分紅
-const InvestmentDividendsABI = async () => {
+const DistributeDividendsABI = async () => {
   try {
     const contract = await initializeContractWithSigner();
     if (!contract) return;
 
-    const tx = await contract.InvestmentDividends();
+    const tx = await contract.DistributeDividends();
 
     const receipt = await tx.wait();
-    console.log("InvestmentDividendsABI", receipt);
+    console.log("DistributeDividendsABI", receipt);
   } catch (error) {
-    console.log("InvestmentDividendsABI", error);
+    console.log("DistributeDividendsABI", error);
   }
 };
 
@@ -265,6 +266,18 @@ const ContractBalance = async () => {
   return ethers.formatEther(contractBalance);
 };
 
+// 查詢推薦人收益
+const GetReferralProfitABI = async () => {
+  try {
+    const contract = await initializeContractWithProvider();
+    const result = await contract.GetReferralProfit();
+    console.log("GetReferralProfitABI", result);
+    return result.toString();
+  } catch (error) {
+    console.log("GetReferralProfitABI", error);
+  }
+};
+
 export {
   // Read Contract 7
   GetInvestmentBalanceABI,
@@ -275,12 +288,13 @@ export {
   investorsProfitABI,
   totalInvestmentAmountABI,
   ContractBalance,
+  GetReferralProfitABI,
   // Write Contract 8
   BuyLotteryTicketsABI,
   LotteryDrawsABI,
-  InvesmentDepositABI,
+  InvestmentDepositABI,
   InvestmentWithdrawalABI,
-  InvestmentDividendsABI,
+  DistributeDividendsABI,
   WithDrawDeveloperProfitABI,
   WithDrawReferralProfitABI,
   // DestructContract
