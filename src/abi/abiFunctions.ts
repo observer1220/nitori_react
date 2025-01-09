@@ -59,7 +59,8 @@ const BuyLotteryTicketsABI = async (
 
     const receipt = await tx.wait(); // 等待交易完成
     console.log("交易成功", receipt);
-    toast.success(`購買成功! 您的彩券號碼為: ${receipt.blockNumber}`, {
+    // 在toast 置入超連結，點擊可直接查看交易紀錄
+    toast.success(`購買成功！彩券區塊號碼為：${receipt.blockNumber}`, {
       position: "top-center",
     });
   } catch (error) {

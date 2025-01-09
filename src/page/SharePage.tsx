@@ -45,18 +45,20 @@ export default function SharePage() {
     <>
       <Container>
         {qrcode}
-        分享連結永久獲得4%的投注金額
-        <TextField
-          id="shareLink"
-          label="分享連結"
-          value={url}
-          disabled
-          size="small"
-          fullWidth
-        />
-        <Button variant="contained" onClick={copyURL}>
-          複製連結
-        </Button>
+        分享連結永久獲得 4% 的投注金額
+        <div style={{ display: "flex", gap: "5px" }}>
+          <TextField
+            id="shareLink"
+            label="分享連結"
+            value={url}
+            disabled
+            size="small"
+            style={{ width: "300px" }}
+          />
+          <Button variant="contained" onClick={copyURL}>
+            複製
+          </Button>
+        </div>
         <div>我的推薦收益：{referalProfit} tBNB</div>
         <Button variant="contained" onClick={WithDrawReferralProfitABI}>
           領取推薦人收益
