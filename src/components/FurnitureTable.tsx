@@ -120,7 +120,6 @@ const FurnitureManagement: React.FC = () => {
 
   return (
     <div>
-      {/* 新增按鈕 */}
       <div
         style={{
           display: "flex",
