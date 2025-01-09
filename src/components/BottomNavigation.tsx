@@ -9,35 +9,29 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import { useNavigate } from "react-router-dom";
 
+const useRefQuery = () => {
+  const currentUrl = new URL(window.location.href);
+  const ref = currentUrl.searchParams.get("ref");
+  return ref ? `?ref=${ref}` : "";
+};
+
 export default function FixedBottomNavigation() {
   const [value, setValue] = React.useState(0);
-  const ref = React.useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const ref = React.useRef<HTMLDivElement>(null);
+  const urlRef = useRefQuery();
 
-  const currentUrl = new URL(window.location.href);
-  const urlRef = currentUrl.searchParams.get("ref")
-    ? `?ref=${currentUrl.searchParams.get("ref")}`
-    : "";
-
-  const handleNavigation = (newValue: any) => {
+  const handleNavigation = (newValue: number) => {
     setValue(newValue);
-    switch (newValue) {
-      case 0:
-        navigate(`/${urlRef}`);
-        break;
-      case 1:
-        navigate(`/buy${urlRef}`);
-        break;
-      case 2:
-        navigate(`/invest${urlRef}`);
-        break;
-      case 3:
-        navigate(`/share${urlRef}`);
-        break;
-      default:
-        break;
-    }
+
+    // 定義路徑對應表
+    const paths = ["/", "/buy", "/invest", "/share"];
+    const targetPath = paths[newValue] || "/";
+
+    // 跳轉頁面，保留推薦碼
+    navigate(`${targetPath}${urlRef}`);
   };
+
   return (
     <Box sx={{ pb: 7 }} ref={ref}>
       <Paper

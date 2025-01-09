@@ -16,16 +16,14 @@ const Container = styled.div`
 const BuyTicketsPage = () => {
   // 查詢 URL 是否有 ref參數
   const currentUrl = new URL(window.location.href);
-  const urlRef = currentUrl.searchParams.get("ref");
+  const urlSuffix = currentUrl.searchParams.get("ref") || "";
 
   const [lotCount, setLotCount] = useState(1);
   const [mul, setMul] = useState(1);
   const [luckyNumber, setLuckyNumber] = useState(0);
-  const [ref, setRef] = useState(urlRef);
+  const [ref, setRef] = useState(urlSuffix);
   const [cost, setCost] = useState(0.02);
 
-  //   - Tickets：0
-  //   - 彩券購買後馬上開獎
   return (
     <>
       <Container>

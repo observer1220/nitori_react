@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const ConnectWallet = () => {
-  // const webUrl = window.location.href;
+  const webUrl = window.location.href;
   const [walletAddress, setWalletAddress] = useState<string | null>(
     sessionStorage.getItem("walletAddress")
   );
@@ -23,9 +23,7 @@ const ConnectWallet = () => {
         console.error("Error connecting to wallet:", error);
       }
     } else {
-      // alert("MetaMask is not installed. Please install it to use this app.");
-      // Detect metamask app in mobile device and open it
-      window.open(`https://metamask.app.link/dapp/https:/pancakeswap.finance/`);
+      window.open(`https://metamask.app.link/dapp/${webUrl}`);
     }
   };
 

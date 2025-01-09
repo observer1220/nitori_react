@@ -18,16 +18,16 @@ const Container = styled.div`
 
 export default function SharePage() {
   const getWalletAddress = sessionStorage.getItem("walletAddress");
-  const url = `${window.location.href}?ref=${getWalletAddress}`; // 取得目前的URL
+  const currentUrl = `${window.location.href}?ref=${getWalletAddress}`;
   const [referalProfit, setReferalProfit] = useState(0);
 
   const qrcode = (
-    <QRCodeCanvas id="qrCode" value={url} size={200} level={"H"} />
+    <QRCodeCanvas id="qrCode" value={currentUrl} size={200} level={"H"} />
   );
 
   // 複製URL
   const copyURL = () => {
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(currentUrl);
     toast.success("已複製連結", {
       position: "top-center",
     });
@@ -50,10 +50,10 @@ export default function SharePage() {
           <TextField
             id="shareLink"
             label="分享連結"
-            value={url}
+            value={currentUrl}
             disabled
             size="small"
-            style={{ width: "300px" }}
+            fullWidth
           />
           <Button variant="contained" onClick={copyURL}>
             複製
