@@ -157,7 +157,7 @@ const FurnitureManagement: React.FC = () => {
           alignItems: "center",
         }}
       >
-        <h2>家具庫存管理</h2>
+        <h3>產品管理</h3>
         <Button
           variant="contained"
           color="primary"
@@ -257,7 +257,7 @@ const FurnitureManagement: React.FC = () => {
             value={currentItem.stock || ""}
             onChange={handleInputChange}
           />
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={{ mt: 1 }}>
             <InputLabel>狀態</InputLabel>
             <Select
               name="status"
@@ -274,7 +274,7 @@ const FurnitureManagement: React.FC = () => {
                 ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={{ mt: 1 }}>
             <InputLabel>分類</InputLabel>
             <Select
               name="category_id"
