@@ -105,7 +105,7 @@ const FurnitureManagement: React.FC = () => {
     if (isEditing) {
       // 編輯現有項目
       setFurnitureList((prev) =>
-        prev.map((item) =>
+        prev?.map((item) =>
           item.id === currentItem.id ? (currentItem as FurnitureItem) : item
         )
       );
@@ -267,7 +267,7 @@ const FurnitureManagement: React.FC = () => {
               fullWidth
             >
               {stock_status &&
-                Object.keys(stock_status).map((key) => (
+                Object.keys(stock_status)?.map((key) => (
                   <MenuItem key={key} value={key}>
                     {stock_status[key as keyof typeof stock_status]}
                   </MenuItem>
@@ -282,7 +282,7 @@ const FurnitureManagement: React.FC = () => {
               value={currentItem.category_id || 0}
               onChange={(event) => handleSelectChange(event)}
             >
-              {categoryList.map((category) => (
+              {categoryList?.map((category) => (
                 <MenuItem key={category.id} value={category.id}>
                   {category.name}
                 </MenuItem>
