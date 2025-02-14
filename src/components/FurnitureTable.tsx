@@ -14,8 +14,10 @@ import {
   TableRow,
   Paper,
   IconButton,
-  Switch,
-  FormControlLabel,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { Edit, Delete, Add } from "@mui/icons-material";
 import {
@@ -25,6 +27,8 @@ import {
   deleteProduct,
 } from "../api/products";
 import { formatNumber } from "../utils/numbers";
+import { fetchCategories } from "../api/category";
+import { stock_status } from "../enum/enums";
 
 // 家具項目的型別定義
 interface FurnitureItem {
@@ -33,14 +37,15 @@ interface FurnitureItem {
   price: number;
   discount_price: number;
   stock: number;
-  category: string;
-  status: boolean;
+  status: string;
+  category_id: number;
 }
 
 const FurnitureManagement: React.FC = () => {
   // 狀態管理
   const [open, setOpen] = useState(false);
   const [furnitureList, setFurnitureList] = useState<FurnitureItem[]>([]);
+  const [categoryList, setCategoryList] = useState<any[]>([]);
   const [currentItem, setCurrentItem] = useState<Partial<FurnitureItem>>({});
   const [isEditing, setIsEditing] = useState(false);
 
@@ -48,6 +53,12 @@ const FurnitureManagement: React.FC = () => {
   const productData = async () => {
     const data = await fetchProducts();
     setFurnitureList(data);
+  };
+
+  // 取得分類清單
+  const categoryData = async () => {
+    const data = await fetchCategories();
+    setCategoryList(data);
   };
 
   // 打開新增對話框
@@ -71,8 +82,26 @@ const FurnitureManagement: React.FC = () => {
     }));
   };
 
+  // 處理選擇變化
+  const handleSelectChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | (Event & { target: { value: string; name: string } })
+      | (Event & { target: { value: number; name: string } })
+  ) => {
+    const name = event.target.name as string;
+    const value = event.target.value as string;
+
+    setCurrentItem((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   // 提交表單
   const handleSubmit = () => {
+    console.log("currentItem", currentItem);
+
     if (isEditing) {
       // 編輯現有項目
       setFurnitureList((prev) =>
@@ -92,8 +121,8 @@ const FurnitureManagement: React.FC = () => {
         price: currentItem.price || 0,
         discount_price: currentItem.discount_price || 0,
         stock: currentItem.stock || 0,
-        category: currentItem.category || "",
-        status: currentItem.status || true,
+        status: currentItem.status || "",
+        category_id: currentItem.category_id || 0,
       } as FurnitureItem;
       setFurnitureList((prev) => [...prev, newItem]);
       addProduct(newItem);
@@ -116,6 +145,7 @@ const FurnitureManagement: React.FC = () => {
 
   useEffect(() => {
     productData();
+    categoryData();
   }, []);
 
   return (
@@ -148,20 +178,24 @@ const FurnitureManagement: React.FC = () => {
               <TableCell>原價</TableCell>
               <TableCell>折扣價</TableCell>
               <TableCell>庫存</TableCell>
-              <TableCell>分類</TableCell>
               <TableCell>狀態</TableCell>
+              <TableCell>分類</TableCell>
               <TableCell>功能</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {furnitureList.map((item) => (
+            {furnitureList?.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{formatNumber(item.price)} 元</TableCell>
                 <TableCell>{formatNumber(item.discount_price)} 元</TableCell>
                 <TableCell>{formatNumber(item.stock)} 件</TableCell>
-                <TableCell>{item.category}</TableCell>
-                <TableCell>{item.status ? "販售中" : "暫停販售"}</TableCell>
+                <TableCell>
+                  {stock_status[item.status as keyof typeof stock_status]}
+                </TableCell>
+                <TableCell>
+                  {categoryList.find((c) => c.id === item.category_id)?.name}
+                </TableCell>
                 <TableCell>
                   <IconButton
                     color="primary"
@@ -223,32 +257,41 @@ const FurnitureManagement: React.FC = () => {
             value={currentItem.stock || ""}
             onChange={handleInputChange}
           />
-          <TextField
-            margin="dense"
-            name="category"
-            label="分類"
-            fullWidth
-            value={currentItem.category || ""}
-            onChange={handleInputChange}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                name="status"
-                checked={currentItem.status || false}
-                onChange={(e) =>
-                  setCurrentItem((prev) => ({
-                    ...prev,
-                    status: e.target.checked,
-                  }))
-                }
-              />
-            }
-            label="狀態"
-          />
+          <FormControl fullWidth>
+            <InputLabel>狀態</InputLabel>
+            <Select
+              name="status"
+              label="狀態"
+              value={currentItem.status || ""}
+              onChange={(event) => handleSelectChange(event)}
+              fullWidth
+            >
+              {stock_status &&
+                Object.keys(stock_status).map((key) => (
+                  <MenuItem key={key} value={key}>
+                    {stock_status[key as keyof typeof stock_status]}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel>分類</InputLabel>
+            <Select
+              name="category_id"
+              label="分類"
+              value={currentItem.category_id || 0}
+              onChange={(event) => handleSelectChange(event)}
+            >
+              {categoryList.map((category) => (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} color="primary" variant="contained">
             確認
           </Button>
           <Button onClick={handleCloseDialog} color="primary">
