@@ -14,4 +14,43 @@ const fetchCategories = async () => {
   }
 };
 
-export { fetchCategories };
+const addCategory = async (product: any) => {
+  try {
+    const response = await axios.post("/categories", product, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Request Error:", error);
+  }
+};
+
+const editCategory = async (id: number, product: any) => {
+  try {
+    const response = await axios.put(`/categories/${id}`, product, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Request Error:", error);
+  }
+};
+
+const deleteCategory = async (id: number) => {
+  try {
+    const response = await axios.delete(`/categories/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Request Error:", error);
+  }
+};
+
+export { fetchCategories, addCategory, editCategory, deleteCategory };

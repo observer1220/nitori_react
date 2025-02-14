@@ -1,10 +1,15 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { styled } from "styled-components";
 import "./App.css";
-import FurnitureManagement from "./pages/FurnitureTable";
+import ProductTable from "./pages/ProductTable";
 import SideBar from "./components/SideBar";
 import CategoryTable from "./pages/CategoryTable";
 import Dashboard from "./pages/Dashboard";
+import SupplierTable from "./pages/SupplierTable";
+import WarehouseTable from "./pages/WarehouseTable";
+import OrderTable from "./pages/OrderTable";
+import CustomerTable from "./pages/CustomerTable";
+import EmployeeTable from "./pages/EmployeeTable";
 
 const Layout = styled.div`
   display: grid;
@@ -27,14 +32,14 @@ function App() {
         <MainContent>
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<FurnitureManagement />} />
-            <Route path="/products" element={<FurnitureManagement />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/products" element={<ProductTable />} />
             <Route path="/categories" element={<CategoryTable />} />
-            <Route path="/suppliers" element={<>Suppliers</>} />
-            <Route path="/warehouses" element={<>Warehouses</>} />
-            <Route path="/orders" element={<>Orders</>} />
-            <Route path="/customers" element={<>Customers</>} />
-            <Route path="/employees" element={<>Employees</>} />
+            <Route path="/suppliers" element={<SupplierTable />} />
+            <Route path="/warehouses" element={<WarehouseTable />} />
+            <Route path="/orders" element={<OrderTable />} />
+            <Route path="/customers" element={<CustomerTable />} />
+            <Route path="/employees" element={<EmployeeTable />} />
           </Routes>
         </MainContent>
       </Layout>

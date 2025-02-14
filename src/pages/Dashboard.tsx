@@ -3,6 +3,7 @@ const Dashboard = () => {
   return (
     <div>
       <h1>Dashboard</h1>
+      <p>這是 Dashboard 頁面</p>
     </div>
   );
 };
