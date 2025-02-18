@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  Button,
-  IconButton,
   Paper,
   Table,
   TableBody,
@@ -11,7 +9,6 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { Edit, Delete, Add } from "@mui/icons-material";
 import TableHeader from "../components/TableHeader";
 import { CategoryType } from "../interface";
 import DialogComponent from "../components/DialogComponent";
@@ -21,63 +18,60 @@ import {
   editCategory,
   deleteCategory,
 } from "../api/category";
+import { CreateButton, EditButton, DeleteButton } from "../components/Buttons";
+import { handleInputChange } from "../utils/formHandlers";
 
 const CategoryTable = () => {
-  const [open, setOpen] = useState(false);
   const [categoryList, setCategoryList] = useState<CategoryType[]>([]);
+  const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentItem, setCurrentItem] = useState<Partial<CategoryType>>({});
 
-  const productData = async () => {
-    const data = await fetchCategories();
-    setCategoryList(data);
+  const fetchData = async () => {
+    const categories = await fetchCategories();
+    setCategoryList(categories);
   };
 
-  // 打開新增對話框
   const handleOpenDialog = () => {
     setCurrentItem({});
     setIsEditing(false);
     setOpen(true);
   };
 
-  // 編輯項目
   const handleEdit = (item: CategoryType) => {
     setCurrentItem(item);
     setIsEditing(true);
     setOpen(true);
   };
 
-  // 刪除項目
   const handleDelete = (id: number) => {
     setCategoryList((prev) => prev.filter((item) => item.id !== id));
     deleteCategory(id);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCurrentItem((prev) => ({
-      ...prev,
-      [name]: name === "price" ? Number(value) : value,
-    }));
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = () => {
+    // console.log("item", item);
+    if (!isEditing) {
+      addCategory(currentItem);
+    } else {
+      editCategory(currentItem.id, currentItem);
+    }
+    fetchData();
   };
 
   useEffect(() => {
-    productData();
-  }, [categoryList]);
+    fetchData();
+  }, []);
 
   return (
     <>
       <TableHeader>
         <h3>分類列表</h3>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<Add />}
-          onClick={handleOpenDialog}
-          sx={{ mb: 2 }}
-        >
-          新增
-        </Button>
+        <CreateButton onClick={handleOpenDialog} />
       </TableHeader>
       <TableContainer component={Paper}>
         <Table>
@@ -92,20 +86,8 @@ const CategoryTable = () => {
               <TableRow key={item.id}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>
-                  <IconButton
-                    color="primary"
-                    onClick={() => handleEdit(item)}
-                    size="small"
-                  >
-                    <Edit />
-                  </IconButton>
-                  <IconButton
-                    color="secondary"
-                    onClick={() => handleDelete(item.id)}
-                    size="small"
-                  >
-                    <Delete />
-                  </IconButton>
+                  <EditButton onClick={() => handleEdit(item)} />
+                  <DeleteButton onClick={() => handleDelete(item.id)} />
                 </TableCell>
               </TableRow>
             ))}
@@ -115,11 +97,10 @@ const CategoryTable = () => {
 
       <DialogComponent
         open={open}
-        setOpen={setOpen}
+        onClose={handleCloseDialog}
         currentItem={currentItem}
         isEditing={isEditing}
-        add={addCategory}
-        edit={editCategory}
+        onSubmit={handleSubmit}
         children={
           <TextField
             margin="dense"
@@ -127,7 +108,7 @@ const CategoryTable = () => {
             label="名稱"
             fullWidth
             value={currentItem.name || ""}
-            onChange={handleInputChange}
+            onChange={(e) => handleInputChange(e, setCurrentItem)}
           />
         }
       />

@@ -1,9 +1,9 @@
 import axios from "axios";
 axios.defaults.baseURL = "http://64.176.37.84:3000";
 
-const fetchProducts = async () => {
+const fetchSuppliers = async () => {
   try {
-    const response = await axios.get("/products", {
+    const response = await axios.get("/suppliers", {
       headers: {
         "Content-Type": "application/json",
       },
@@ -14,9 +14,9 @@ const fetchProducts = async () => {
   }
 };
 
-const addProduct = async (product: any) => {
+const addSupplier = async (product: any) => {
   try {
-    const response = await axios.post("/products", product, {
+    const response = await axios.post("/suppliers", product, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -27,9 +27,9 @@ const addProduct = async (product: any) => {
   }
 };
 
-const editProduct = async (id: number | undefined, product: any) => {
+const editSupplier = async (id: number | undefined, product: any) => {
   try {
-    const response = await axios.put(`/products/${id}`, product, {
+    const response = await axios.put(`/suppliers/${id}`, product, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -40,9 +40,9 @@ const editProduct = async (id: number | undefined, product: any) => {
   }
 };
 
-const deleteProduct = async (id: number) => {
+const deleteSupplier = async (id: number) => {
   try {
-    const response = await axios.delete(`/products/${id}`, {
+    const response = await axios.delete(`/suppliers/${id}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -53,4 +53,4 @@ const deleteProduct = async (id: number) => {
   }
 };
 
-export { fetchProducts, addProduct, editProduct, deleteProduct };
+export { fetchSuppliers, addSupplier, editSupplier, deleteSupplier };

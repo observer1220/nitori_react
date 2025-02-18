@@ -27,7 +27,7 @@ const addCategory = async (product: any) => {
   }
 };
 
-const editCategory = async (id: number, product: any) => {
+const editCategory = async (id: number | undefined, product: any) => {
   try {
     const response = await axios.put(`/categories/${id}`, product, {
       headers: {

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Button,
   TextField,
   Table,
   TableBody,
@@ -9,109 +8,86 @@ import {
   TableHead,
   TableRow,
   Paper,
-  IconButton,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { Edit, Delete, Add } from "@mui/icons-material";
 import {
   fetchProducts,
   addProduct,
   editProduct,
   deleteProduct,
 } from "../api/products";
-import { formatNumber } from "../utils/numbers";
 import { fetchCategories } from "../api/category";
 import { stock_status } from "../enum/enums";
+import { CategoryType, ProductType } from "../interface";
 import TableHeader from "../components/TableHeader";
-import { ProductType } from "../interface";
 import DialogComponent from "../components/DialogComponent";
+import { CreateButton, EditButton, DeleteButton } from "../components/Buttons";
+import { formatNumber } from "../utils/numbers";
+import { handleInputChange, handleSelectChange } from "../utils/formHandlers";
 
 const ProductTable: React.FC = () => {
-  // 狀態管理
   const [open, setOpen] = useState(false);
   const [productList, setProductList] = useState<ProductType[]>([]);
-  const [categoryList, setCategoryList] = useState<any[]>([]);
+  const [categoryList, setCategoryList] = useState<CategoryType[]>([]);
   const [currentItem, setCurrentItem] = useState<Partial<ProductType>>({});
   const [isEditing, setIsEditing] = useState(false);
 
-  // 取得家具清單
-  const productData = async () => {
-    const data = await fetchProducts();
-    setProductList(data);
+  const fetchData = async () => {
+    try {
+      const [products, categories] = await Promise.all([
+        fetchProducts(),
+        fetchCategories(),
+      ]);
+      setProductList(products);
+      setCategoryList(categories);
+    } catch (error) {
+      console.error("Request Error:", error);
+    }
   };
 
-  // 取得分類清單
-  const categoryData = async () => {
-    const data = await fetchCategories();
-    setCategoryList(data);
-  };
-
-  // 打開新增對話框
   const handleOpenDialog = () => {
     setCurrentItem({});
     setIsEditing(false);
     setOpen(true);
   };
 
-  // 處理輸入變化
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCurrentItem((prev) => ({
-      ...prev,
-      [name]: name === "price" ? Number(value) : value,
-    }));
-  };
-
-  // 處理選擇變化
-  const handleSelectChange = (
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | (Event & { target: { value: string; name: string } })
-      | (Event & { target: { value: number; name: string } })
-  ) => {
-    const name = event.target.name as string;
-    const value = event.target.value as string;
-
-    setCurrentItem((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // 編輯項目
   const handleEdit = (item: ProductType) => {
     setCurrentItem(item);
     setIsEditing(true);
     setOpen(true);
   };
 
-  // 刪除項目
   const handleDelete = (id: number) => {
     setProductList((prev) => prev.filter((item) => item.id !== id));
     deleteProduct(id);
   };
 
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = () => {
+    // console.log("item", item);
+    if (!isEditing) {
+      addProduct(currentItem);
+    } else {
+      editProduct(currentItem.id, currentItem);
+    }
+    fetchData();
+  };
+
   useEffect(() => {
-    productData();
-    categoryData();
-  }, [productList]);
+    fetchData();
+  }, []);
 
   return (
     <>
       <TableHeader>
         <h3>產品管理</h3>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<Add />}
-          onClick={handleOpenDialog}
-          sx={{ mb: 2 }}
-        >
-          新增
-        </Button>
+        <CreateButton onClick={handleOpenDialog} />
       </TableHeader>
 
       <TableContainer component={Paper}>
@@ -141,20 +117,8 @@ const ProductTable: React.FC = () => {
                   {categoryList.find((c) => c.id === item.category_id)?.name}
                 </TableCell>
                 <TableCell>
-                  <IconButton
-                    color="primary"
-                    onClick={() => handleEdit(item)}
-                    size="small"
-                  >
-                    <Edit />
-                  </IconButton>
-                  <IconButton
-                    color="secondary"
-                    onClick={() => handleDelete(item.id)}
-                    size="small"
-                  >
-                    <Delete />
-                  </IconButton>
+                  <EditButton onClick={() => handleEdit(item)} />
+                  <DeleteButton onClick={() => handleDelete(item.id)} />
                 </TableCell>
               </TableRow>
             ))}
@@ -164,11 +128,10 @@ const ProductTable: React.FC = () => {
 
       <DialogComponent
         open={open}
-        setOpen={setOpen}
+        onClose={handleCloseDialog}
         currentItem={currentItem}
         isEditing={isEditing}
-        add={addProduct}
-        edit={editProduct}
+        onSubmit={handleSubmit}
         children={
           <>
             <TextField
@@ -177,7 +140,7 @@ const ProductTable: React.FC = () => {
               label="家具名稱"
               fullWidth
               value={currentItem.name || ""}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setCurrentItem)}
             />
             <TextField
               margin="dense"
@@ -186,7 +149,7 @@ const ProductTable: React.FC = () => {
               type="number"
               fullWidth
               value={currentItem.price || ""}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setCurrentItem)}
             />
             <TextField
               margin="dense"
@@ -195,7 +158,7 @@ const ProductTable: React.FC = () => {
               type="number"
               fullWidth
               value={currentItem.discount_price || ""}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setCurrentItem)}
             />
             <TextField
               margin="dense"
@@ -204,7 +167,7 @@ const ProductTable: React.FC = () => {
               type="number"
               fullWidth
               value={currentItem.stock || ""}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setCurrentItem)}
             />
             <FormControl fullWidth sx={{ mt: 1 }}>
               <InputLabel>狀態</InputLabel>
@@ -212,7 +175,7 @@ const ProductTable: React.FC = () => {
                 name="status"
                 label="狀態"
                 value={currentItem.status || ""}
-                onChange={(event) => handleSelectChange(event)}
+                onChange={(event) => handleSelectChange(event, setCurrentItem)}
                 fullWidth
               >
                 {stock_status &&
@@ -229,7 +192,7 @@ const ProductTable: React.FC = () => {
                 name="category_id"
                 label="分類"
                 value={currentItem.category_id || 0}
-                onChange={(event) => handleSelectChange(event)}
+                onChange={(event) => handleSelectChange(event, setCurrentItem)}
               >
                 {categoryList?.map((category) => (
                   <MenuItem key={category.id} value={category.id}>

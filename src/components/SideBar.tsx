@@ -19,6 +19,7 @@ const SideBar = () => {
         {pathList.map((item, idx) => (
           <ListItemButton
             selected={selectedIndex === idx}
+            key={item.name}
             onClick={() => handleListItemClick(idx, item.path)}
           >
             {item.name}

@@ -6,49 +6,38 @@ import {
   DialogTitle,
 } from "@mui/material";
 
+// inspect the parameters of the component
 interface DialogComponentProps {
   open: boolean;
-  setOpen: (open: boolean) => void;
+  onClose: () => void;
   currentItem: any;
   isEditing: boolean;
-  add: (item: any) => void;
-  edit: (id: number, item: any) => void;
+  onSubmit: (item: any) => void;
   children: React.ReactNode;
 }
 
 const DialogComponent = ({
   open,
-  setOpen,
+  onClose,
   currentItem,
   isEditing,
-  add,
-  edit,
+  onSubmit,
   children,
 }: DialogComponentProps) => {
   const handleSubmit = () => {
-    console.log("currentItem", currentItem);
-
-    if (isEditing) {
-      edit(currentItem.id, currentItem);
-    } else {
-      add(currentItem);
-    }
-    handleCloseDialog();
-  };
-
-  const handleCloseDialog = () => {
-    setOpen(false);
+    onSubmit(currentItem);
+    onClose();
   };
 
   return (
-    <Dialog open={open} onClose={handleCloseDialog}>
-      <DialogTitle>{isEditing ? "編輯" : "新增"}</DialogTitle>
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>{!isEditing ? "新增" : "編輯"}</DialogTitle>
       <DialogContent>{children}</DialogContent>
       <DialogActions>
         <Button onClick={handleSubmit} color="primary" variant="contained">
           確認
         </Button>
-        <Button onClick={handleCloseDialog} color="primary">
+        <Button onClick={onClose} color="primary">
           取消
         </Button>
       </DialogActions>
