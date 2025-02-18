@@ -12,7 +12,7 @@ import {
 import TableHeader from "../components/TableHeader";
 import { CreateButton, DeleteButton, EditButton } from "../components/Buttons";
 import DialogComponent from "../components/DialogComponent";
-import { CategoryType } from "../interface";
+import { SupplierType } from "../interface";
 import { handleInputChange } from "../utils/formHandlers";
 import {
   fetchSuppliers,
@@ -22,15 +22,13 @@ import {
 } from "../api/supplier";
 
 const SupplierTable = () => {
-  const [supplierList, setSuppliers] = useState<CategoryType[]>([]);
+  const [supplierList, setSuppliers] = useState<SupplierType[]>([]);
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [currentItem, setCurrentItem] = useState<Partial<CategoryType>>({});
+  const [currentItem, setCurrentItem] = useState<Partial<SupplierType>>({});
 
   const fetchData = async () => {
     const suppliers = await fetchSuppliers();
-    console.log(suppliers);
-
     setSuppliers(suppliers);
   };
 
@@ -40,27 +38,26 @@ const SupplierTable = () => {
     setOpen(true);
   };
 
-  const handleEdit = (item: CategoryType) => {
+  const handleEdit = (item: SupplierType) => {
     setCurrentItem(item);
     setIsEditing(true);
     setOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     setSuppliers((prev) => prev.filter((item) => item.id !== id));
-    deleteSupplier(id);
+    await deleteSupplier(id);
   };
 
   const handleCloseDialog = () => {
     setOpen(false);
   };
 
-  const handleSubmit = () => {
-    // console.log("item", item);
+  const handleSubmit = async () => {
     if (!isEditing) {
-      addSupplier(currentItem);
+      await addSupplier(currentItem);
     } else {
-      editSupplier(currentItem.id, currentItem);
+      await editSupplier(currentItem.id, currentItem);
     }
     fetchData();
   };
@@ -79,6 +76,8 @@ const SupplierTable = () => {
           <TableHead>
             <TableRow>
               <TableCell>名稱</TableCell>
+              <TableCell>EMAIL</TableCell>
+              <TableCell>電話</TableCell>
               <TableCell>功能</TableCell>
             </TableRow>
           </TableHead>
@@ -86,6 +85,8 @@ const SupplierTable = () => {
             {supplierList?.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.name}</TableCell>
+                <TableCell>{item.email}</TableCell>
+                <TableCell>{item.phone_number}</TableCell>
                 <TableCell>
                   <EditButton onClick={() => handleEdit(item)} />
                   <DeleteButton onClick={() => handleDelete(item.id)} />
@@ -103,14 +104,32 @@ const SupplierTable = () => {
         isEditing={isEditing}
         onSubmit={handleSubmit}
         children={
-          <TextField
-            margin="dense"
-            name="name"
-            label="名稱"
-            fullWidth
-            value={currentItem.name || ""}
-            onChange={(e) => handleInputChange(e, setCurrentItem)}
-          />
+          <>
+            <TextField
+              margin="dense"
+              name="name"
+              label="名稱"
+              fullWidth
+              value={currentItem.name || ""}
+              onChange={(e) => handleInputChange(e, setCurrentItem)}
+            />
+            <TextField
+              margin="dense"
+              name="email"
+              label="Email"
+              fullWidth
+              value={currentItem.email || ""}
+              onChange={(e) => handleInputChange(e, setCurrentItem)}
+            />
+            <TextField
+              margin="dense"
+              name="phone_number"
+              label="電話"
+              fullWidth
+              value={currentItem.phone_number || ""}
+              onChange={(e) => handleInputChange(e, setCurrentItem)}
+            />
+          </>
         }
       />
     </>

@@ -19,9 +19,13 @@ const Layout = styled.div`
 `;
 
 const MainContent = styled.div`
-  overflow: auto; /* 確保內容區域可滾動 */
+  overflow: auto;
   min-width: 600px;
-  padding: 20px;
+  padding: 0 20px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 function App() {

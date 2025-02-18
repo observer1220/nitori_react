@@ -21,28 +21,32 @@ import {
 } from "../api/products";
 import { fetchCategories } from "../api/category";
 import { stock_status } from "../enum/enums";
-import { CategoryType, ProductType } from "../interface";
+import { CategoryType, ProductType, SupplierType } from "../interface";
 import TableHeader from "../components/TableHeader";
 import DialogComponent from "../components/DialogComponent";
 import { CreateButton, EditButton, DeleteButton } from "../components/Buttons";
 import { formatNumber } from "../utils/numbers";
 import { handleInputChange, handleSelectChange } from "../utils/formHandlers";
+import { fetchSuppliers } from "../api/supplier";
 
 const ProductTable: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [productList, setProductList] = useState<ProductType[]>([]);
   const [categoryList, setCategoryList] = useState<CategoryType[]>([]);
+  const [supplierList, setSupplierList] = useState<SupplierType[]>([]);
   const [currentItem, setCurrentItem] = useState<Partial<ProductType>>({});
   const [isEditing, setIsEditing] = useState(false);
 
   const fetchData = async () => {
     try {
-      const [products, categories] = await Promise.all([
+      const [products, categories, suppliers] = await Promise.all([
         fetchProducts(),
         fetchCategories(),
+        fetchSuppliers(),
       ]);
       setProductList(products);
       setCategoryList(categories);
+      setSupplierList(suppliers);
     } catch (error) {
       console.error("Request Error:", error);
     }
@@ -60,21 +64,20 @@ const ProductTable: React.FC = () => {
     setOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     setProductList((prev) => prev.filter((item) => item.id !== id));
-    deleteProduct(id);
+    await deleteProduct(id);
   };
 
   const handleCloseDialog = () => {
     setOpen(false);
   };
 
-  const handleSubmit = () => {
-    // console.log("item", item);
+  const handleSubmit = async () => {
     if (!isEditing) {
-      addProduct(currentItem);
+      await addProduct(currentItem);
     } else {
-      editProduct(currentItem.id, currentItem);
+      await editProduct(currentItem.id, currentItem);
     }
     fetchData();
   };
@@ -100,6 +103,7 @@ const ProductTable: React.FC = () => {
               <TableCell>庫存</TableCell>
               <TableCell>狀態</TableCell>
               <TableCell>分類</TableCell>
+              <TableCell>廠商</TableCell>
               <TableCell>功能</TableCell>
             </TableRow>
           </TableHead>
@@ -115,6 +119,9 @@ const ProductTable: React.FC = () => {
                 </TableCell>
                 <TableCell>
                   {categoryList.find((c) => c.id === item.category_id)?.name}
+                </TableCell>
+                <TableCell>
+                  {supplierList.find((s) => s.id === item.supplier_id)?.name}
                 </TableCell>
                 <TableCell>
                   <EditButton onClick={() => handleEdit(item)} />
@@ -197,6 +204,21 @@ const ProductTable: React.FC = () => {
                 {categoryList?.map((category) => (
                   <MenuItem key={category.id} value={category.id}>
                     {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 1 }}>
+              <InputLabel>廠商</InputLabel>
+              <Select
+                name="supplier_id"
+                label="廠商"
+                value={currentItem.supplier_id || 0}
+                onChange={(event) => handleSelectChange(event, setCurrentItem)}
+              >
+                {supplierList?.map((supplier) => (
+                  <MenuItem key={supplier.id} value={supplier.id}>
+                    {supplier.name}
                   </MenuItem>
                 ))}
               </Select>

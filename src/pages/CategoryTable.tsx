@@ -44,21 +44,21 @@ const CategoryTable = () => {
     setOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     setCategoryList((prev) => prev.filter((item) => item.id !== id));
-    deleteCategory(id);
+    await deleteCategory(id);
   };
 
   const handleCloseDialog = () => {
     setOpen(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // console.log("item", item);
     if (!isEditing) {
-      addCategory(currentItem);
+      await addCategory(currentItem);
     } else {
-      editCategory(currentItem.id, currentItem);
+      await editCategory(currentItem.id, currentItem);
     }
     fetchData();
   };

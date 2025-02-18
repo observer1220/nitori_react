@@ -6,6 +6,7 @@ interface ProductType {
   stock: number;
   status: string;
   category_id: number;
+  supplier_id: number;
 }
 
 interface CategoryType {
@@ -13,4 +14,37 @@ interface CategoryType {
   name: string;
 }
 
-export type { ProductType, CategoryType };
+interface SupplierType {
+  id: number;
+  name: string;
+  email: string;
+  phone_number: string;
+}
+
+interface WarehousesType {
+  id: number;
+  location: string;
+  capacity: string;
+}
+
+interface InventoryType {}
+
+interface CustomerType {}
+
+interface OrderType {}
+
+interface OrderItemType {}
+
+interface EmployeeType {}
+
+export type {
+  ProductType,
+  CategoryType,
+  SupplierType,
+  WarehousesType,
+  InventoryType,
+  CustomerType,
+  OrderType,
+  OrderItemType,
+  EmployeeType,
+};
