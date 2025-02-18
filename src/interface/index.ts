@@ -27,15 +27,42 @@ interface WarehousesType {
   capacity: string;
 }
 
-interface InventoryType {}
+interface InventoryType {
+  id: number;
+  product_id: number;
+  warehouse_id: number;
+  quantity: number;
+}
 
-interface CustomerType {}
+interface CustomerType {
+  id: number;
+  name: string;
+  email: string;
+  phone_number: string;
+}
 
-interface OrderType {}
+interface OrderType {
+  id: number;
+  customer_id: number;
+  order_date: string;
+  status: string;
+  total_price: string;
+}
 
-interface OrderItemType {}
+interface OrderItemType {
+  id: number;
+  order_id: number;
+  product_id: number;
+  quantity: number;
+  price: string;
+}
 
-interface EmployeeType {}
+interface EmployeeType {
+  id: number;
+  name: string;
+  position: string;
+  warehouse_id: string;
+}
 
 export type {
   ProductType,

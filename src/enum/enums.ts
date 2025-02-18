@@ -22,7 +22,7 @@ const pathList = [
     path: "/suppliers",
   },
   {
-    name: "倉庫及庫存管理",
+    name: "倉庫管理",
     path: "/warehouses",
   },
   {
