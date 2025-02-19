@@ -1,3 +1,5 @@
+import { SelectChangeEvent } from "@mui/material";
+
 const handleInputChange = <T extends Record<string, any>>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   setState: React.Dispatch<React.SetStateAction<T>>
@@ -11,7 +13,7 @@ const handleInputChange = <T extends Record<string, any>>(
 
 const handleSelectChange = <T>(
   event:
-    | React.ChangeEvent<HTMLInputElement>
+    | SelectChangeEvent<string | number>
     | (Event & { target: { value: string; name: string } })
     | (Event & { target: { value: number; name: string } }),
   setState: React.Dispatch<React.SetStateAction<T>>

@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import {
+  FormControl,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -12,24 +16,28 @@ import {
 import TableHeader from "../components/TableHeader";
 import { CreateButton, DeleteButton, EditButton } from "../components/Buttons";
 import DialogComponent from "../components/DialogComponent";
-import { EmployeeType } from "../interface";
-import { handleInputChange } from "../utils/formHandlers";
+import { EmployeeType, WarehousesType } from "../interface";
+import { handleInputChange, handleSelectChange } from "../utils/formHandlers";
 import {
   fetchEmployees,
   addEmployee,
   editEmployee,
   deleteEmployee,
 } from "../api/employee";
+import { fetchWarehouses } from "../api/warehouse";
 
 const EmployeeTable = () => {
   const [employeeList, setEmployee] = useState<EmployeeType[]>([]);
+  const [warehouseList, setWarehouse] = useState<WarehousesType[]>([]);
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentItem, setCurrentItem] = useState<Partial<EmployeeType>>({});
 
   const fetchData = async () => {
-    const suppliers = await fetchEmployees();
-    setEmployee(suppliers);
+    const employees = await fetchEmployees();
+    const warehouses = await fetchWarehouses();
+    setEmployee(employees);
+    setWarehouse(warehouses);
   };
 
   const handleOpenDialog = () => {
@@ -54,6 +62,8 @@ const EmployeeTable = () => {
   };
 
   const handleSubmit = async () => {
+    console.log(currentItem);
+
     if (!isEditing) {
       await addEmployee(currentItem);
     } else {
@@ -121,14 +131,21 @@ const EmployeeTable = () => {
               value={currentItem.position || ""}
               onChange={(e) => handleInputChange(e, setCurrentItem)}
             />
-            <TextField
-              margin="dense"
-              name="warehouse_id"
-              label="工廠"
-              fullWidth
-              value={currentItem.warehouse_id || ""}
-              onChange={(e) => handleInputChange(e, setCurrentItem)}
-            />
+            <FormControl fullWidth sx={{ mt: 1 }}>
+              <InputLabel>工廠</InputLabel>
+              <Select
+                name="warehouse_id"
+                label="工廠"
+                value={currentItem.warehouse_id || 0}
+                onChange={(event) => handleSelectChange(event, setCurrentItem)}
+              >
+                {warehouseList?.map((warehouse) => (
+                  <MenuItem key={warehouse.id} value={warehouse.id}>
+                    {warehouse.location}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </>
         }
       />
