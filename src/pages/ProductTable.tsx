@@ -20,12 +20,12 @@ import {
   deleteProduct,
 } from "../api/products";
 import { fetchCategories } from "../api/category";
-import { stock_status } from "../enum/enums";
+import { StockStatus } from "../enum/enums";
 import { CategoryType, ProductType, SupplierType } from "../interface";
 import TableHeader from "../components/TableHeader";
 import DialogComponent from "../components/DialogComponent";
 import { CreateButton, EditButton, DeleteButton } from "../components/Buttons";
-import { formatNumber } from "../utils/numbers";
+import { formatNumber } from "../utils/formator";
 import { handleInputChange, handleSelectChange } from "../utils/formHandlers";
 import { fetchSuppliers } from "../api/supplier";
 
@@ -115,7 +115,7 @@ const ProductTable: React.FC = () => {
                 <TableCell>{formatNumber(item.discount_price)} 元</TableCell>
                 <TableCell>{formatNumber(item.stock)} 件</TableCell>
                 <TableCell>
-                  {stock_status[item.status as keyof typeof stock_status]}
+                  {StockStatus[item.status as keyof typeof StockStatus]}
                 </TableCell>
                 <TableCell>
                   {categoryList.find((c) => c.id === item.category_id)?.name}
@@ -185,10 +185,10 @@ const ProductTable: React.FC = () => {
                 onChange={(event) => handleSelectChange(event, setCurrentItem)}
                 fullWidth
               >
-                {stock_status &&
-                  Object.keys(stock_status)?.map((key) => (
+                {StockStatus &&
+                  Object.keys(StockStatus)?.map((key) => (
                     <MenuItem key={key} value={key}>
-                      {stock_status[key as keyof typeof stock_status]}
+                      {StockStatus[key as keyof typeof StockStatus]}
                     </MenuItem>
                   ))}
               </Select>

@@ -1,7 +1,15 @@
-const stock_status = {
+const StockStatus = {
   available: "販售中",
   out_of_stock: "暫停販售",
   discontinued: "已下架",
+};
+
+const OrderStatus = {
+  pending: "待處理",
+  paid: "已付款",
+  shipped: "已出貨",
+  cancelled: "已取消",
+  completed: "已完成", // 資料庫沒有這個狀態
 };
 
 const pathList = [
@@ -39,4 +47,4 @@ const pathList = [
   },
 ];
 
-export { stock_status, pathList };
+export { StockStatus, OrderStatus, pathList };
