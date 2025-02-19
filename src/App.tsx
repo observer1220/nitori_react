@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { styled } from "styled-components";
 import "./App.css";
 import ProductTable from "./pages/ProductTable";
@@ -21,7 +21,6 @@ const Layout = styled.div`
 const MainContent = styled.div`
   overflow: auto;
   min-width: 600px;
-  padding: 0 20px;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -35,6 +34,7 @@ function App() {
         <SideBar />
         <MainContent>
           <Routes>
+            <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/products" element={<ProductTable />} />

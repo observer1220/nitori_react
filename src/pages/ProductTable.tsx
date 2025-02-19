@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   TextField,
   Table,
@@ -12,6 +12,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  TableSortLabel,
+  Box,
 } from "@mui/material";
 import {
   fetchProducts,
@@ -21,13 +23,14 @@ import {
 } from "../api/products";
 import { fetchCategories } from "../api/category";
 import { StockStatus } from "../enum/enums";
-import { CategoryType, ProductType, SupplierType } from "../interface";
+import { CategoryType, Order, ProductType, SupplierType } from "../interface";
 import TableHeader from "../components/TableHeader";
 import DialogComponent from "../components/DialogComponent";
 import { CreateButton, EditButton, DeleteButton } from "../components/Buttons";
 import { formatNumber } from "../utils/formator";
 import { handleInputChange, handleSelectChange } from "../utils/formHandlers";
 import { fetchSuppliers } from "../api/supplier";
+import { visuallyHidden } from "@mui/utils";
 
 const ProductTable: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -36,6 +39,8 @@ const ProductTable: React.FC = () => {
   const [supplierList, setSupplierList] = useState<SupplierType[]>([]);
   const [currentItem, setCurrentItem] = useState<Partial<ProductType>>({});
   const [isEditing, setIsEditing] = useState(false);
+  const [orderBy, setOrderBy] = useState("name");
+  const [order, setOrder] = useState<Order>("asc");
 
   const fetchData = async () => {
     try {
@@ -82,6 +87,38 @@ const ProductTable: React.FC = () => {
     fetchData();
   };
 
+  const headCells = [
+    { id: "name", numeric: false, disablePadding: true, label: "名稱" },
+    { id: "price", numeric: true, disablePadding: false, label: "原價" },
+    {
+      id: "discount_price",
+      numeric: true,
+      disablePadding: false,
+      label: "折扣價",
+    },
+    { id: "stock", numeric: true, disablePadding: false, label: "庫存" },
+    { id: "status", numeric: false, disablePadding: false, label: "狀態" },
+    { id: "category_id", numeric: false, disablePadding: false, label: "分類" },
+    { id: "supplier_id", numeric: false, disablePadding: false, label: "廠商" },
+    { id: "action", numeric: false, disablePadding: false, label: "功能" },
+  ];
+
+  const handleSorted = (property: string) => () => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const visibleRows = useMemo(() => {
+    return productList.sort((a: any, b: any) => {
+      if (order === "asc") {
+        return a[orderBy] > b[orderBy] ? 1 : -1;
+      } else {
+        return a[orderBy] < b[orderBy] ? 1 : -1;
+      }
+    });
+  }, [productList, orderBy, order]);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -92,23 +129,35 @@ const ProductTable: React.FC = () => {
         <h3>產品管理</h3>
         <CreateButton onClick={handleOpenDialog} />
       </TableHeader>
-
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>名稱</TableCell>
-              <TableCell>原價</TableCell>
-              <TableCell>折扣價</TableCell>
-              <TableCell>庫存</TableCell>
-              <TableCell>狀態</TableCell>
-              <TableCell>分類</TableCell>
-              <TableCell>廠商</TableCell>
-              <TableCell>功能</TableCell>
+              {headCells.map((headCell) => (
+                <TableCell
+                  key={headCell.id}
+                  sortDirection={orderBy === headCell.id ? order : false}
+                >
+                  <TableSortLabel
+                    active={orderBy === headCell.id}
+                    direction={orderBy === headCell.id ? order : "asc"}
+                    onClick={handleSorted(headCell.id)}
+                  >
+                    {headCell.label}
+                    {orderBy === headCell.id ? (
+                      <Box component="span" sx={visuallyHidden}>
+                        {order === "desc"
+                          ? "sorted descending"
+                          : "sorted ascending"}
+                      </Box>
+                    ) : null}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {productList?.map((item) => (
+            {visibleRows?.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{formatNumber(item.price)} 元</TableCell>
@@ -132,7 +181,6 @@ const ProductTable: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
       <DialogComponent
         open={open}
         onClose={handleCloseDialog}

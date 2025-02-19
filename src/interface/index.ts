@@ -64,6 +64,8 @@ interface EmployeeType {
   warehouse_id: string;
 }
 
+type Order = "asc" | "desc";
+
 export type {
   ProductType,
   CategoryType,
@@ -74,4 +76,5 @@ export type {
   OrderType,
   OrderItemType,
   EmployeeType,
+  Order,
 };
