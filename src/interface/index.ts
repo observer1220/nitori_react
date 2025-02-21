@@ -64,6 +64,11 @@ interface EmployeeType {
   warehouse_id: string;
 }
 
+interface LoginType {
+  name: string;
+  passwd: string;
+}
+
 type Order = "asc" | "desc";
 
 export type {
@@ -77,4 +82,5 @@ export type {
   OrderItemType,
   EmployeeType,
   Order,
+  LoginType,
 };

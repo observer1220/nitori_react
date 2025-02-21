@@ -1,4 +1,4 @@
-import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import "./App.css";
 import ProductTable from "./pages/ProductTable";
@@ -10,6 +10,7 @@ import WarehouseTable from "./pages/WarehouseTable";
 import OrderTable from "./pages/OrderTable";
 import CustomerTable from "./pages/CustomerTable";
 import EmployeeTable from "./pages/EmployeeTable";
+import LoginPage from "./pages/LoginPage";
 
 const Layout = styled.div`
   display: grid;
@@ -30,25 +31,41 @@ const MainContent = styled.div`
 function App() {
   return (
     <HashRouter>
-      <Layout>
-        <SideBar />
-        <MainContent>
-          <Routes>
-            <Route index element={<Navigate replace to="dashboard" />} />
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/products" element={<ProductTable />} />
-            <Route path="/categories" element={<CategoryTable />} />
-            <Route path="/suppliers" element={<SupplierTable />} />
-            <Route path="/warehouses" element={<WarehouseTable />} />
-            <Route path="/orders" element={<OrderTable />} />
-            <Route path="/customers" element={<CustomerTable />} />
-            <Route path="/employees" element={<EmployeeTable />} />
-          </Routes>
-        </MainContent>
-      </Layout>
+      <AppRoutes />
     </HashRouter>
   );
 }
+
+const AppRoutes = () => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login";
+  const token = localStorage.getItem("token");
+
+  // 需驗證 token 是否為後端所發放，避免前端隨意更改
+
+  if (!token && !isLoginPage) {
+    return <LoginPage />;
+  }
+
+  return isLoginPage ? (
+    <LoginPage />
+  ) : (
+    <Layout>
+      <SideBar />
+      <MainContent>
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/products" element={<ProductTable />} />
+          <Route path="/categories" element={<CategoryTable />} />
+          <Route path="/suppliers" element={<SupplierTable />} />
+          <Route path="/warehouses" element={<WarehouseTable />} />
+          <Route path="/orders" element={<OrderTable />} />
+          <Route path="/customers" element={<CustomerTable />} />
+          <Route path="/employees" element={<EmployeeTable />} />
+        </Routes>
+      </MainContent>
+    </Layout>
+  );
+};
 
 export default App;

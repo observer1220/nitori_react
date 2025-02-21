@@ -1,8 +1,4 @@
 #root {
   padding: 2rem;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
+  width: 100%;
 }
