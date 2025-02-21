@@ -47,7 +47,11 @@ const LoginPage = () => {
       return;
     } else {
       const response = await login(currentItem.name, currentItem.passwd);
+      console.log(response);
+
       if (response) {
+        localStorage.setItem("id", response.id);
+        localStorage.setItem("name", response.name);
         localStorage.setItem("token", response.token);
         navigate("/dashboard");
       } else {

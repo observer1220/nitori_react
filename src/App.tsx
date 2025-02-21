@@ -11,6 +11,7 @@ import OrderTable from "./pages/OrderTable";
 import CustomerTable from "./pages/CustomerTable";
 import EmployeeTable from "./pages/EmployeeTable";
 import LoginPage from "./pages/LoginPage";
+import ToolBar from "./components/ToolBar";
 
 const Layout = styled.div`
   display: grid;
@@ -42,7 +43,6 @@ const AppRoutes = () => {
   const token = localStorage.getItem("token");
 
   // 需驗證 token 是否為後端所發放，避免前端隨意更改
-
   if (!token && !isLoginPage) {
     return <LoginPage />;
   }
@@ -53,6 +53,7 @@ const AppRoutes = () => {
     <Layout>
       <SideBar />
       <MainContent>
+        <ToolBar />
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/products" element={<ProductTable />} />

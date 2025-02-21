@@ -65,7 +65,7 @@ interface EmployeeType {
 }
 
 interface LoginType {
-  name: string;
+  name: string | null;
   passwd: string;
 }
 

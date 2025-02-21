@@ -13,4 +13,13 @@ const login = async (name: string, passwd: string) => {
   }
 };
 
-export { login };
+const changePassword = async (id: number, passwd: string) => {
+  try {
+    const response = await axios.put(`/login/${id}`, { passwd });
+    return response.data;
+  } catch (error) {
+    console.error("Request Error:", error);
+  }
+};
+
+export { login, changePassword };
