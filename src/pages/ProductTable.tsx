@@ -110,7 +110,7 @@ const ProductTable: React.FC = () => {
   };
 
   const visibleRows = useMemo(() => {
-    return productList.sort((a: any, b: any) => {
+    return productList?.sort((a: any, b: any) => {
       if (order === "asc") {
         return a[orderBy] > b[orderBy] ? 1 : -1;
       } else {
