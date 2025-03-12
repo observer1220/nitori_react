@@ -82,7 +82,7 @@ const LoginPage = () => {
           label="帳號"
           fullWidth
           variant="outlined"
-          value={currentItem.name || ""}
+          value={currentItem.name || "observer1220@gmail.com"}
           onChange={(e) => handleInputChange(e, setCurrentItem)}
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -103,7 +103,7 @@ const LoginPage = () => {
           type="password"
           fullWidth
           variant="outlined"
-          value={currentItem.passwd || ""}
+          value={currentItem.passwd || "test1234"}
           onChange={(e) => handleInputChange(e, setCurrentItem)}
           sx={{
             "& .MuiOutlinedInput-root": {
